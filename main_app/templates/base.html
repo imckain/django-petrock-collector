@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Pokemon Collector</title>
+    <title>Pet Rock Collector</title>
 </head>
 <body>
     <header class="navbar-fixed">
@@ -16,7 +16,7 @@
             <div class="nav-wrapper">
                 <ul>
                     <li>
-                        <a href="{% url 'home' %}" class="left brand-logo">Pokemon Collector</a>
+                        <a href="{% url 'home' %}" class="left brand-logo">Pet Rock Collector</a>
                     </li>
                 </ul>
                 <ul class="right">
@@ -24,10 +24,10 @@
                         <a href="{% url 'about' %}">About</a>
                     </li>
                     <li>
-                        <a href="{% url 'pokemon_create' %}">Add a Pokemon</a>
+                        <a href="{% url 'petrocks_create' %}">Add a Pet Rock</a>
                     </li>
                     <li>
-                        <a href="{% url 'cats_index' %}">All Teams</a>
+                        <a href="{% url 'petrocks_index' %}">All Pets</a>
                     </li>
                 </ul>
             </div>
