@@ -12,4 +12,4 @@ class Petrock(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("petrocks_detail", kwargs={"petrock_id": self.id}) 
+        return reverse("petrocks_detail", kwargs={"petrock_id": self.id})  
