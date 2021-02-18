@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.http import HttpResponse
+from django.views.generic import ListView, DetailView
 
-from .models import Petrock
+from .models import Petrock, Hat
 
 # Create your views here.
 def home(request): 
@@ -30,3 +30,22 @@ class PetrockUpdate(UpdateView):
 class PetrockDelete(DeleteView):
     model = Petrock
     success_url = '/petrocks/'
+
+class HatList(ListView):
+    model = Hat
+
+class HatDetailView(DetailView):
+    model = Hat
+
+class HatCreateView(CreateView):
+    model = Hat
+    fields = '__all__'
+
+class HatUpdateView(UpdateView):
+    model = Hat
+    fields = '__all__'
+
+class HatDeleteView(DeleteView):
+    model = Hat
+    success_url = '/hats/'
+

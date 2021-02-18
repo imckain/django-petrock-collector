@@ -13,3 +13,16 @@ class Petrock(models.Model):
     
     def get_absolute_url(self):
         return reverse("petrocks_detail", kwargs={"petrock_id": self.id})
+
+class Hat(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse("hats_detail", kwargs={"pk": self.id})
+
+
+    
