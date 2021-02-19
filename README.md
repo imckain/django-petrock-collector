@@ -1,1 +1,2 @@
-# django-pokemon-collector
+# Django App
+## Pet Rock Collector
