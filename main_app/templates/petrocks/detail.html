@@ -5,7 +5,7 @@
 <h1>Petrock Details</h1>
 
 <div class="row">
-    <div class="co s6">
+    <div class="col s6">
         <div class="card">
             <div class="card-content">
                 <span class="card-title">{{ petrock.name }}</span>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="col s6">
-        <form action="{% url 'add-feeding' petrock.id %}" method="POST">
+        <form action="{% url 'add_feeding' petrock.id %}" method="POST">
             {% csrf_token %}
             {{ feeding_form.as_p }}
             <input type="submit" value="Add Feeding" class="btn">
@@ -59,6 +59,28 @@
                         <span class="card-title">
                             A <span style="color: {{ hat.color }}">{{ hat.color }}</span> {{ hat.name }}
                         </span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h5>No Hats :(</h5>
+        {% endif %}
+    </div>
+    <div class="col s6">
+        <h3>Available Hats</h3>
+        {% if available_hats.count %}
+            {% for hat in available_hats.all %}
+                <div class="card">
+                    <div class="card-content">
+                        <span class="card-title">
+                            A <span style="color: {{ hat.color }}">{{ hat.color }}</span> {{ hat.name }}
+                        </span>
+                    </div>
+                    <div class="card-action">
+                        <form action="{% url 'associate_hat' petrock.id hat.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn">Add</button>
+                        </form>
                     </div>
                 </div>
             {% endfor %}

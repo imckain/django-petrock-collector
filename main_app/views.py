@@ -27,12 +27,12 @@ def petrocks_detail(request, petrock_id):
     })
 
 def add_feeding(request, petrock_id):
-    form = FeedingForm(request.post)
+    form = FeedingForm(request.POST)
     if form.is_valid():
         new_feeding = form.save(commit=False)
         new_feeding.petrock_id = petrock_id
         new_feeding.save()
-    return redirect('detail', petrock_id=petrock_id)
+    return redirect('petrocks_detail', petrock_id=petrock_id)
 
 def associate_hat(request, petrock_id, hat_id):
     Petrock.objects.get(id=petrock_id).hats.add(hat_id)
