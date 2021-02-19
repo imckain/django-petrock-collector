@@ -3,6 +3,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 
 from .models import Petrock, Hat
+from .forms import FeedingForm
 
 # Create your views here.
 def home(request): 
@@ -17,7 +18,13 @@ def petrocks_index(request):
 
 def petrocks_detail(request, petrock_id):
     petrock = Petrock.objects.get(id=petrock_id)
-    return render(request, 'petrocks/detail.html', { 'petrock': petrock })
+    hats_petrock_doesnt_have = Hat.objects.exclude(id__in = petrock.hats.all().values_list('id'))
+    feeding_form = FeedingForm()
+    return render(request, 'petrocks/detail.html', { 
+        'petrock': petrock,
+        'feeding_form': feeding_form,
+        'available_hats': hats_petrock_doesnt_have
+    })
 
 def add_feeding(request, petrock_id):
     form = FeedingForm(request.post)
@@ -26,6 +33,10 @@ def add_feeding(request, petrock_id):
         new_feeding.petrock_id = petrock_id
         new_feeding.save()
     return redirect('detail', petrock_id=petrock_id)
+
+def associate_hat(request, petrock_id, hat_id):
+    Petrock.objects.get(id=petrock_id).hats.add(hat_id)
+    return redirect('petrocks_detail', petrock_id=petrock_id)
 
 class PetrockCreate(CreateView):
     model = Petrock
