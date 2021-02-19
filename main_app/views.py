@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 
@@ -18,6 +18,14 @@ def petrocks_index(request):
 def petrocks_detail(request, petrock_id):
     petrock = Petrock.objects.get(id=petrock_id)
     return render(request, 'petrocks/detail.html', { 'petrock': petrock })
+
+def add_feeding(request, petrock_id):
+    form = FeedingForm(request.post)
+    if form.is_valid():
+        new_feeding = form.save(commit=False)
+        new_feeding.petrock_id = petrock_id
+        new_feeding.save()
+    return redirect('detail', petrock_id=petrock_id)
 
 class PetrockCreate(CreateView):
     model = Petrock
