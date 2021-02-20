@@ -122,3 +122,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Override redirect URL for a successful login
+LOGIN_REDIRECT_URL = '/petrocks/'
+# Override redirect URL for a successful logout
+LOGOUT_REDIRECT_URL = '/'

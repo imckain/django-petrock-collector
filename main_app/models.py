@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import date
-from djano.contrib.auth.models import User
+from django.contrib.auth.models import User
 
 # Create your models here.
 MEALS = (
@@ -58,4 +58,3 @@ class Photo(models.Model):
 
     def __str__(self):
         return f"Photo for petrock id#{self.petrock_id} @ {self.url}"
-        

@@ -78,33 +78,46 @@ def add_photo(request, petrock_id):
 
     return redirect('petrocks_detail', petrock_id=petrock_id)
 
-class PetrockCreate(CreateView):
+class PetrockCreate(LoginRequiredMixin, CreateView):
     model = Petrock
     fields = '__all__'
 
-class PetrockUpdate(UpdateView):
+class PetrockUpdate(LoginRequiredMixin, UpdateView):
     model = Petrock
     fields = ['rockType', 'description', 'personality']
 
-class PetrockDelete(DeleteView):
+class PetrockDelete(LoginRequiredMixin, DeleteView):
     model = Petrock
     success_url = '/petrocks/'
 
-class HatList(ListView):
+class HatList(LoginRequiredMixin, ListView):
     model = Hat
 
-class HatDetailView(DetailView):
+class HatDetailView(LoginRequiredMixin, DetailView):
     model = Hat
 
-class HatCreateView(CreateView):
-    model = Hat
-    fields = '__all__'
-
-class HatUpdateView(UpdateView):
+class HatCreateView(LoginRequiredMixin, CreateView):
     model = Hat
     fields = '__all__'
 
-class HatDeleteView(DeleteView):
+class HatUpdateView(LoginRequiredMixin, UpdateView):
+    model = Hat
+    fields = '__all__'
+
+class HatDeleteView(LoginRequiredMixin, DeleteView):
     model = Hat
     success_url = '/hats/'
 
+def signup(request):
+    error_message = ''
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+        else:
+            error_message = 'Invalid sign up - try again'
+    form = UserCreationForm()
+    context = {'form': form, 'error_message': error_message}
+    return render(request, 'registration /signup.html', context)
