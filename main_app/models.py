@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from datetime import date
+from djano.contrib.auth.models import User
 
 # Create your models here.
 MEALS = (
@@ -25,6 +26,7 @@ class Petrock(models.Model):
     description = models.TextField(max_length=250)
     personality = models.IntegerField()
     hats = models.ManyToManyField(Hat)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -49,3 +51,11 @@ class Feeding(models.Model):
 
     class Meta:
         ordering = ['-date']
+
+class Photo(models.Model):
+    url = models.CharField(max_length=200)
+    petrock = models.ForeignKey(Petrock, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Photo for petrock id#{self.petrock_id} @ {self.url}"
+        

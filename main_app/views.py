@@ -1,9 +1,20 @@
+import uuid
+import boto3
+
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 
-from .models import Petrock, Hat
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .models import Petrock, Hat, Photo
 from .forms import FeedingForm
+
+S3_BASE_URL = 'https://s3.us-east-2.amazonaws.com/'
+BUCKET = 'petrock-collector'
 
 # Create your views here.
 def home(request): 
@@ -12,10 +23,12 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
+@login_required
 def petrocks_index(request):
     petrocks = Petrock.objects.all()
     return render(request, 'petrocks/index.html', { 'petrocks': petrocks })
 
+@login_required
 def petrocks_detail(request, petrock_id):
     petrock = Petrock.objects.get(id=petrock_id)
     hats_petrock_doesnt_have = Hat.objects.exclude(id__in = petrock.hats.all().values_list('id'))
@@ -26,6 +39,7 @@ def petrocks_detail(request, petrock_id):
         'available_hats': hats_petrock_doesnt_have
     })
 
+@login_required
 def add_feeding(request, petrock_id):
     form = FeedingForm(request.POST)
     if form.is_valid():
@@ -34,8 +48,34 @@ def add_feeding(request, petrock_id):
         new_feeding.save()
     return redirect('petrocks_detail', petrock_id=petrock_id)
 
+@login_required
 def associate_hat(request, petrock_id, hat_id):
     Petrock.objects.get(id=petrock_id).hats.add(hat_id)
+    return redirect('petrocks_detail', petrock_id=petrock_id)
+
+@login_required
+def unassociate_hat(request, petrock_id, hat_id):
+    Petrock.objects.get(id=petrock_id).hats.remove(hat_id)
+    return redirect('petrocks_detail', petrock_id=petrock_id)
+
+@login_required
+def add_photo(request, petrock_id):
+    photo_file = request.FILES.get('photo_file', None)
+
+    if photo_file:
+        s3 = boto3.client('s3')
+        index_of_last_period = photo_file.name.rfind('.')
+        key = uuid.uuid4().hex[:6] + photo_file.name[index_of_last_period:]
+
+        try:
+            s3.upload_fileobj(photo_file, BUCKET, key)
+            url = f"{S3_BASE_URL}{BUCKET}/{key}"
+
+            photo = Photo(url=url, petrock_id=petrock_id)
+            photo.save()
+        except:
+            print('An error occurred uploading files to AWS')
+
     return redirect('petrocks_detail', petrock_id=petrock_id)
 
 class PetrockCreate(CreateView):
