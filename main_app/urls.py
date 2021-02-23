@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
-    path('petrocks/', views.petrocks_index, name='petrocks_index'),
+    path('petrocks/', views.petrocks_index, name='index'),
     path('petrocks/<int:petrock_id>/', views.petrocks_detail, name='petrocks_detail'),
     path('petrocks/create/', views.PetrockCreate.as_view(), name='petrocks_create'),
     path('petrocks/<int:pk>/update', views.PetrockUpdate.as_view(), name='petrocks_update'),
@@ -18,4 +18,5 @@ urlpatterns = [
     path('hats/create/', views.HatCreateView.as_view(), name='hats_create'),
     path('hats/<int:pk>/update/', views.HatUpdateView.as_view(), name='hats_update'),
     path('hats/<int:pk>/delete/', views.HatDeleteView.as_view(), name='hats_delete'),
+    path('accounts/signup', views.signup, name='signup'),
 ]

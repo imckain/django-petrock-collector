@@ -17,6 +17,21 @@ S3_BASE_URL = 'https://s3.us-east-2.amazonaws.com/'
 BUCKET = 'petrock-collector'
 
 # Create your views here.
+class PetrockCreate(LoginRequiredMixin, CreateView):
+    model = Petrock
+    fields = ['name', 'rockType', 'description', 'personality']
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class PetrockUpdate(LoginRequiredMixin, UpdateView):
+    model = Petrock
+    fields = ['rockType', 'description', 'personality']
+
+class PetrockDelete(LoginRequiredMixin, DeleteView):
+    model = Petrock
+    success_url = '/petrocks/'
+
 def home(request): 
     return render(request, 'home.html')
 
@@ -25,7 +40,7 @@ def about(request):
 
 @login_required
 def petrocks_index(request):
-    petrocks = Petrock.objects.all()
+    petrocks = Petrock.objects.filter(user=request.user)
     return render(request, 'petrocks/index.html', { 'petrocks': petrocks })
 
 @login_required
@@ -78,18 +93,6 @@ def add_photo(request, petrock_id):
 
     return redirect('petrocks_detail', petrock_id=petrock_id)
 
-class PetrockCreate(LoginRequiredMixin, CreateView):
-    model = Petrock
-    fields = '__all__'
-
-class PetrockUpdate(LoginRequiredMixin, UpdateView):
-    model = Petrock
-    fields = ['rockType', 'description', 'personality']
-
-class PetrockDelete(LoginRequiredMixin, DeleteView):
-    model = Petrock
-    success_url = '/petrocks/'
-
 class HatList(LoginRequiredMixin, ListView):
     model = Hat
 
@@ -120,4 +123,4 @@ def signup(request):
             error_message = 'Invalid sign up - try again'
     form = UserCreationForm()
     context = {'form': form, 'error_message': error_message}
-    return render(request, 'registration /signup.html', context)
+    return render(request, 'registration/signup.html', context)
