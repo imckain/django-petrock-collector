@@ -18,6 +18,19 @@
                 <a href="{% url 'petrocks_delete' petrock.id %}">Delete</a>
             </div>
         </div>
+        <!-- Photo Upload -->
+        {% for photo in petrock.photo_set.all %}
+            <img src="{{ photo.url }}" alt="{{ photo.url }}" class="responsive-img card-panel">
+        {% empty %}
+            <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+        {% endfor %}
+        <!-- Add photos -->
+        <form action="{% url 'add_photo' petrock.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
+            {% csrf_token %}
+            <input type="file" name="photo_file">
+            <br><br>
+            <input type="submit" value="Upload Photo" class="btn">
+        </form>
     </div>
     <div class="col s6">
         <form action="{% url 'add_feeding' petrock.id %}" method="POST">
@@ -99,7 +112,7 @@
       setDefaultDate: true,
       autoClose: true
     });
-  
+
     // initialize the meal select
     var selectEl = document.getElementById('id_meal');
     M.FormSelect.init(selectEl);
