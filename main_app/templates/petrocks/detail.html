@@ -73,6 +73,12 @@
                             A <span style="color: {{ hat.color }}">{{ hat.color }}</span> {{ hat.name }}
                         </span>
                     </div>
+                    <div class="card-action">
+                        <form action="{% url 'unassociate_hat' petrock.id hat.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn">Remove</button>
+                        </form>
+                    </div>
                 </div>
             {% endfor %}
         {% else %}
